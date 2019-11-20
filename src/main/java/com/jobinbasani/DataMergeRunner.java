@@ -9,10 +9,9 @@ import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public class DataMergeRunner {
     private static final Logger logger = LoggerFactory.getLogger(DataMergeRunner.class);
@@ -39,31 +38,9 @@ public class DataMergeRunner {
 
     private void runDataMerge() {
         List<RecordReader> recordReaders = Collections.singletonList(new CsvRecordReader());
-        List<File> fileList = getFiles(new File(Optional.ofNullable(source).orElse(defaultSource)), recordReaders);
-        logger.info("Files = {}", fileList);
-        List<Record> records = fileList.stream()
-                .map(file -> getRecordReader(recordReaders, file).getRecords(file))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-        logger.info("Records size = {}", records.size());
-    }
-
-    private List<File> getFiles(File sourceFile, List<RecordReader> recordReaders) {
-        List<File> files = new ArrayList<>();
-        logger.info("Source = {}", sourceFile.getAbsolutePath());
-        if (sourceFile.exists() && sourceFile.isFile()) {
-            files.add(sourceFile);
-        } else if (sourceFile.exists() && sourceFile.isDirectory()) {
-            List<File> supportedFiles = Stream.of(sourceFile.listFiles())
-                    .filter(file -> recordReaders.stream().anyMatch(recordReader -> recordReader.canProcessFile(file)))
-                    .collect(Collectors.toList());
-            files.addAll(supportedFiles);
-        }
-        return files;
-    }
-
-    private RecordReader getRecordReader(List<RecordReader> recordReaders, File file) {
-        return recordReaders.stream().filter(recordReader -> recordReader.canProcessFile(file)).findFirst().get();
+        DataMergeProcessor dataMergeProcessor = new DataMergeProcessor(Optional.ofNullable(source).orElse(defaultSource),recordReaders);
+        List<Record> records = dataMergeProcessor.getRecords();
+        logger.info("Record size = {}",records.size());
     }
 
 }
