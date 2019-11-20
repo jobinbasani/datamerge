@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface RecordProcessor {
     RecordType getRecordType();
-    boolean canProcessFile(File reportFile);
+    default boolean canProcessFile(File reportFile){
+        return reportFile.isFile() && reportFile.getName().toUpperCase().endsWith("." + getRecordType().name());
+    }
     List<Record> getRecords(File reportFile);
     void writeRecords(List<Record> records, File inputReferenceFile, File outputFile);
 }

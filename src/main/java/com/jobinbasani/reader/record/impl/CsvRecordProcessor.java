@@ -32,11 +32,6 @@ public class CsvRecordProcessor implements RecordProcessor {
     }
 
     @Override
-    public boolean canProcessFile(File reportFile) {
-        return reportFile.isFile() && reportFile.getName().toUpperCase().endsWith("." + getRecordType().name());
-    }
-
-    @Override
     public List<Record> getRecords(File reportFile){
         try {
             CSVReader csvReader = new CSVReaderBuilder(Files.newBufferedReader(reportFile.toPath()))

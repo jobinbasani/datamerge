@@ -3,6 +3,7 @@ package com.jobinbasani;
 import com.jobinbasani.reader.RecordProcessor;
 import com.jobinbasani.reader.record.Record;
 import com.jobinbasani.reader.record.impl.CsvRecordProcessor;
+import com.jobinbasani.reader.record.impl.JsonRecordProcessor;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -11,10 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.jobinbasani.reader.enums.RecordType.CSV;
 import static java.util.Optional.ofNullable;
 
 public class DataMergeRunner {
@@ -41,13 +41,13 @@ public class DataMergeRunner {
     }
 
     private void runDataMerge() {
-        List<RecordProcessor> recordProcessors = Collections.singletonList(new CsvRecordProcessor());
+        List<RecordProcessor> recordProcessors = Arrays.asList(new CsvRecordProcessor(), new JsonRecordProcessor());
         DataMergeProcessor dataMergeProcessor = new DataMergeProcessor(ofNullable(source).orElse(defaultSource), recordProcessors);
         List<Record> records = dataMergeProcessor.getRecords();
         logger.info("Record size = {}",records.size());
         logger.info("Records = {}", records);
         File outputFile = new File("C:\\Users\\jobin.basani\\Downloads\\csvoutput" + LocalDateTime.now().getNano() + ".csv");
-        dataMergeProcessor.writeRecords(records, CSV, outputFile);
+        //dataMergeProcessor.writeRecords(records, CSV, outputFile);
     }
 
 }
