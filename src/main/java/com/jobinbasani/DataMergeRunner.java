@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.jobinbasani.reader.enums.RecordType.CSV;
 import static java.util.Optional.ofNullable;
 
 public class DataMergeRunner {
@@ -47,7 +48,7 @@ public class DataMergeRunner {
         logger.info("Record size = {}",records.size());
         logger.info("Records = {}", records);
         File outputFile = new File("C:\\Users\\jobin.basani\\Downloads\\csvoutput" + LocalDateTime.now().getNano() + ".csv");
-        //dataMergeProcessor.writeRecords(records, CSV, outputFile);
+        dataMergeProcessor.writeRecords(records, CSV, outputFile);
     }
 
 }

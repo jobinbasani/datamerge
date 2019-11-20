@@ -1,5 +1,6 @@
 package com.jobinbasani.reader.record.impl;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jobinbasani.reader.record.Record;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
@@ -64,6 +65,45 @@ public class ReportRecord implements Record {
     @Override
     public int getMaxHoleSize() {
         return maxHoleSize;
+    }
+
+    @JsonProperty("client-address")
+    public void setClientAddress(String clientAddress) {
+        this.clientAddress = clientAddress;
+    }
+
+    @JsonProperty("client-guid")
+    public void setClientGuid(String clientGuid) {
+        this.clientGuid = clientGuid;
+    }
+    @JsonProperty("request-time")
+    public void setRequestTime(ZonedDateTime requestTime) {
+        this.requestTime = requestTime;
+    }
+
+    @JsonProperty("service-guid")
+    public void setServiceGuid(String serviceGuid) {
+        this.serviceGuid = serviceGuid;
+    }
+
+    @JsonProperty("retries-request")
+    public void setRetriesRequest(int retriesRequest) {
+        this.retriesRequest = retriesRequest;
+    }
+
+    @JsonProperty("packets-requested")
+    public void setPacketsRequested(int packetsRequested) {
+        this.packetsRequested = packetsRequested;
+    }
+
+    @JsonProperty("packets-serviced")
+    public void setPacketsServiced(int packetsServiced) {
+        this.packetsServiced = packetsServiced;
+    }
+
+    @JsonProperty("max-hole-size")
+    public void setMaxHoleSize(int maxHoleSize) {
+        this.maxHoleSize = maxHoleSize;
     }
 
     @Override
