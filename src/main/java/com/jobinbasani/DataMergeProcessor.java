@@ -1,6 +1,6 @@
 package com.jobinbasani;
 
-import com.jobinbasani.reader.RecordReader;
+import com.jobinbasani.reader.RecordProcessor;
 import com.jobinbasani.reader.record.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +14,11 @@ import java.util.stream.Stream;
 
 public class DataMergeProcessor {
     private final Collection<File> files;
-    private final Collection<RecordReader> recordReaders;
+    private final Collection<RecordProcessor> recordProcessors;
     private static final Logger logger = LoggerFactory.getLogger(DataMergeProcessor.class);
 
-    public DataMergeProcessor(String file, Collection<RecordReader> recordReaders) {
-        this.recordReaders = recordReaders;
+    public DataMergeProcessor(String file, Collection<RecordProcessor> recordProcessors) {
+        this.recordProcessors = recordProcessors;
         this.files = getFiles(new File(file));
     }
 
@@ -37,14 +37,14 @@ public class DataMergeProcessor {
             files.add(sourceFile);
         } else if (sourceFile.exists() && sourceFile.isDirectory()) {
             List<File> supportedFiles = Stream.of(sourceFile.listFiles())
-                    .filter(file -> recordReaders.stream().anyMatch(recordReader -> recordReader.canProcessFile(file)))
+                    .filter(file -> recordProcessors.stream().anyMatch(recordProcessor -> recordProcessor.canProcessFile(file)))
                     .collect(Collectors.toList());
             files.addAll(supportedFiles);
         }
         return files;
     }
 
-    private RecordReader getRecordReader(File file) {
-        return recordReaders.stream().filter(recordReader -> recordReader.canProcessFile(file)).findFirst().get();
+    private RecordProcessor getRecordReader(File file) {
+        return recordProcessors.stream().filter(recordProcessor -> recordProcessor.canProcessFile(file)).findFirst().get();
     }
 }

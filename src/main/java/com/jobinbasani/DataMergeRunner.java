@@ -1,8 +1,8 @@
 package com.jobinbasani;
 
-import com.jobinbasani.reader.RecordReader;
+import com.jobinbasani.reader.RecordProcessor;
 import com.jobinbasani.reader.record.Record;
-import com.jobinbasani.reader.record.impl.CsvRecordReader;
+import com.jobinbasani.reader.record.impl.CsvRecordProcessor;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -37,10 +37,11 @@ public class DataMergeRunner {
     }
 
     private void runDataMerge() {
-        List<RecordReader> recordReaders = Collections.singletonList(new CsvRecordReader());
-        DataMergeProcessor dataMergeProcessor = new DataMergeProcessor(Optional.ofNullable(source).orElse(defaultSource),recordReaders);
+        List<RecordProcessor> recordProcessors = Collections.singletonList(new CsvRecordProcessor());
+        DataMergeProcessor dataMergeProcessor = new DataMergeProcessor(Optional.ofNullable(source).orElse(defaultSource), recordProcessors);
         List<Record> records = dataMergeProcessor.getRecords();
         logger.info("Record size = {}",records.size());
+        logger.info("Records = {}", records);
     }
 
 }
