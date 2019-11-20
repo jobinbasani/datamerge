@@ -1,8 +1,7 @@
 package com.jobinbasani.reader.record.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.jobinbasani.reader.RecordProcessor;
 import com.jobinbasani.reader.enums.RecordType;
 import com.jobinbasani.reader.record.Record;
@@ -19,25 +18,27 @@ import java.util.List;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
-public class JsonRecordProcessor implements RecordProcessor {
-    private static final Logger logger = LoggerFactory.getLogger(JsonRecordProcessor.class);
+public class XmlRecordProcessor implements RecordProcessor {
+
+    private static final Logger logger = LoggerFactory.getLogger(XmlRecordProcessor.class);
 
     @Override
     public RecordType getRecordType() {
-        return RecordType.JSON;
+        return RecordType.XML;
     }
 
     @Override
     public List<Record> getRecords(File reportFile) {
-        ObjectMapper mapper = new ObjectMapper();
+
+        XmlMapper mapper = new XmlMapper();
         mapper.findAndRegisterModules();
         mapper.disable(FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
-        try(Reader fileReader = Files.newBufferedReader(reportFile.toPath())) {
-            List<ReportRecord> records = mapper.readValue(fileReader, new TypeReference<List<ReportRecord>>(){});
-            return new ArrayList<>(records);
+        logger.info("Processing file -> {}",reportFile.toPath());
+        try(Reader reader = Files.newBufferedReader(reportFile.toPath())) {
+            List<ReportRecord> entries = mapper.readValue(reader, new TypeReference<List<ReportRecord>>() {});
+            return new ArrayList<>(entries);
         } catch (IOException e) {
-            logger.error("Error parsing JSON report - ", e);
+            logger.error("Error processing XML Report - ", e);
         }
         return Collections.EMPTY_LIST;
     }

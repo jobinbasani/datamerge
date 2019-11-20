@@ -2,8 +2,7 @@ package com.jobinbasani;
 
 import com.jobinbasani.reader.RecordProcessor;
 import com.jobinbasani.reader.record.Record;
-import com.jobinbasani.reader.record.impl.CsvRecordProcessor;
-import com.jobinbasani.reader.record.impl.JsonRecordProcessor;
+import com.jobinbasani.reader.record.impl.XmlRecordProcessor;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -42,7 +41,7 @@ public class DataMergeRunner {
     }
 
     private void runDataMerge() {
-        List<RecordProcessor> recordProcessors = Arrays.asList(new CsvRecordProcessor(), new JsonRecordProcessor());
+        List<RecordProcessor> recordProcessors = Arrays.asList(new XmlRecordProcessor());
         DataMergeProcessor dataMergeProcessor = new DataMergeProcessor(ofNullable(source).orElse(defaultSource), recordProcessors);
         List<Record> records = dataMergeProcessor.getRecords();
         logger.info("Record size = {}",records.size());

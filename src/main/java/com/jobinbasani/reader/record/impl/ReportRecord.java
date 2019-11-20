@@ -1,12 +1,15 @@
 package com.jobinbasani.reader.record.impl;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.jobinbasani.reader.record.Record;
+import com.jobinbasani.reader.record.deserializer.DateDeserializer;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
 
 import java.time.ZonedDateTime;
-
+@JacksonXmlRootElement(localName = "records")
 public class ReportRecord implements Record {
 
     @CsvBindByPosition(position = 0)
@@ -77,6 +80,7 @@ public class ReportRecord implements Record {
         this.clientGuid = clientGuid;
     }
     @JsonProperty("request-time")
+    @JsonDeserialize(using = DateDeserializer.class)
     public void setRequestTime(ZonedDateTime requestTime) {
         this.requestTime = requestTime;
     }
