@@ -1,6 +1,6 @@
 package com.jobinbasani.reader.enums;
 
-public enum ReaderType {
+public enum RecordType {
     CSV,
     XML,
     JSON

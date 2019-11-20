@@ -9,9 +9,13 @@ import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+
+import static com.jobinbasani.reader.enums.RecordType.CSV;
+import static java.util.Optional.ofNullable;
 
 public class DataMergeRunner {
     private static final Logger logger = LoggerFactory.getLogger(DataMergeRunner.class);
@@ -38,10 +42,12 @@ public class DataMergeRunner {
 
     private void runDataMerge() {
         List<RecordProcessor> recordProcessors = Collections.singletonList(new CsvRecordProcessor());
-        DataMergeProcessor dataMergeProcessor = new DataMergeProcessor(Optional.ofNullable(source).orElse(defaultSource), recordProcessors);
+        DataMergeProcessor dataMergeProcessor = new DataMergeProcessor(ofNullable(source).orElse(defaultSource), recordProcessors);
         List<Record> records = dataMergeProcessor.getRecords();
         logger.info("Record size = {}",records.size());
         logger.info("Records = {}", records);
+        File outputFile = new File("C:\\Users\\jobin.basani\\Downloads\\csvoutput" + LocalDateTime.now().getNano() + ".csv");
+        dataMergeProcessor.writeRecords(records, CSV, outputFile);
     }
 
 }

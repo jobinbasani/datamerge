@@ -4,7 +4,7 @@ import com.jobinbasani.reader.record.Record;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class ReportRecord implements Record {
 
@@ -14,7 +14,7 @@ public class ReportRecord implements Record {
     private String clientGuid;
     @CsvBindByPosition(position = 2)
     @CsvDate("yyyy-MM-dd HH:mm:ss z")
-    private LocalDateTime requestTime;
+    private ZonedDateTime requestTime;
     @CsvBindByPosition(position = 3)
     private String serviceGuid;
     @CsvBindByPosition(position = 4)
@@ -37,7 +37,7 @@ public class ReportRecord implements Record {
     }
 
     @Override
-    public LocalDateTime getRequestTime() {
+    public ZonedDateTime getRequestTime() {
         return requestTime;
     }
 

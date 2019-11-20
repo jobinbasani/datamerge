@@ -1,6 +1,7 @@
 package com.jobinbasani;
 
 import com.jobinbasani.reader.RecordProcessor;
+import com.jobinbasani.reader.enums.RecordType;
 import com.jobinbasani.reader.record.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,12 +32,21 @@ public class DataMergeProcessor {
                 .collect(Collectors.toList());
     }
 
+    public void writeRecords(List<Record> records, RecordType recordType, File outputFile){
+        Optional<File> referenceFile = files.stream().filter(file -> file.getName().toUpperCase().endsWith("."+recordType.name())).findFirst();
+        if (referenceFile.isPresent()) {
+            recordProcessors.stream().filter(recordProcessor -> recordProcessor.getRecordType() == recordType)
+                    .findFirst()
+                    .ifPresent(recordProcessor -> recordProcessor.writeRecords(records, referenceFile.get(), outputFile));
+        }
+    }
+
     private List<File> getFiles(File sourceFile) {
         List<File> files = new ArrayList<>();
         logger.info("Source = {}", sourceFile.getAbsolutePath());
         if (sourceFile.exists() && sourceFile.isFile()) {
             files.add(sourceFile);
-        } else if (sourceFile.exists() && sourceFile.isDirectory()) {
+        } else if (sourceFile.exists() && sourceFile.isDirectory() && sourceFile.listFiles() != null) {
             List<File> supportedFiles = Stream.of(sourceFile.listFiles())
                     .filter(file -> recordProcessors.stream().anyMatch(recordProcessor -> recordProcessor.canProcessFile(file)))
                     .collect(Collectors.toList());
