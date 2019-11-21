@@ -51,6 +51,12 @@ public class CsvRecordProcessor implements RecordProcessor {
 
     @Override
     public void writeRecords(List<Record> records, File inputReferenceFile, File outputFile) {
+        try {
+            Files.createDirectories(outputFile.toPath().getParent());
+        } catch (IOException e) {
+            logger.error("Error creating output directory structure {}",e);
+            return;
+        }
         try(CSVWriter csvWriter = new CSVWriter(Files.newBufferedWriter(outputFile.toPath(), CREATE, APPEND), DEFAULT_SEPARATOR, NO_QUOTE_CHARACTER, DEFAULT_ESCAPE_CHARACTER, RFC4180_LINE_END);
             CSVReader csvReader = new CSVReader(Files.newBufferedReader(inputReferenceFile.toPath()))) {
             MappingStrategy<ReportRecord> strategy = new FuzzyMappingStrategy<>();

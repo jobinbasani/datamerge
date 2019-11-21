@@ -1,6 +1,7 @@
 package com.jobinbasani.reader.record.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.jobinbasani.reader.RecordProcessor;
 import com.jobinbasani.reader.enums.RecordType;
@@ -33,11 +34,13 @@ public class XmlRecordProcessor implements RecordProcessor {
         XmlMapper mapper = new XmlMapper();
         mapper.findAndRegisterModules();
         mapper.disable(FAIL_ON_UNKNOWN_PROPERTIES);
-        logger.info("Processing file -> {}",reportFile.toPath());
         try(Reader reader = Files.newBufferedReader(reportFile.toPath())) {
             List<ReportRecord> entries = mapper.readValue(reader, new TypeReference<List<ReportRecord>>() {});
+            logger.info("Processed file -> {}",reportFile.toPath());
             return new ArrayList<>(entries);
-        } catch (IOException e) {
+        } catch (MismatchedInputException mie){
+            logger.error("Skipping {}, appears to be invalid",reportFile.getAbsolutePath());
+        }catch (IOException e) {
             logger.error("Error processing XML Report - ", e);
         }
         return Collections.EMPTY_LIST;

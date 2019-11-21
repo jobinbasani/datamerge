@@ -1,12 +1,14 @@
 package com.jobinbasani.reader.record.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DateDeserializer extends StdDeserializer<ZonedDateTime> {
     public DateDeserializer() {
@@ -18,8 +20,12 @@ public class DateDeserializer extends StdDeserializer<ZonedDateTime> {
     }
 
     @Override
-    public ZonedDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-
-        return ZonedDateTime.now();
+    public ZonedDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        String date = jsonParser.getText();
+        try{
+            return ZonedDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(date)), ZoneId.systemDefault());
+        }catch (NumberFormatException nfe){
+            return ZonedDateTime.parse(date, DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm:ss z"));
+        }
     }
 }
