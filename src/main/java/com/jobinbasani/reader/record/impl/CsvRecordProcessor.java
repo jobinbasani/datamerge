@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,7 +55,12 @@ public class CsvRecordProcessor implements RecordProcessor {
     @Override
     public void writeRecords(List<Record> records, File inputReferenceFile, File outputFile) {
         try {
-            Files.createDirectories(outputFile.toPath().getParent());
+            if(outputFile.isDirectory()){
+                Files.createDirectories(outputFile.toPath());
+                outputFile = Paths.get(outputFile.toPath().toString(), String.format("output_%d.csv", LocalDateTime.now().getNano())).toFile();
+            }else{
+                Files.createDirectories(outputFile.toPath().getParent());
+            }
         } catch (IOException e) {
             logger.error("Error creating output directory structure",e);
             return;

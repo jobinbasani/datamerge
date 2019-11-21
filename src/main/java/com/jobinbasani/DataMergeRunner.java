@@ -42,7 +42,7 @@ public class DataMergeRunner {
             runDataMerge();
         } catch (CmdLineException e) {
             logger.error("Error parsing arguments!");
-            logger.error("Valid arguments: -source ");
+            logger.error("Valid arguments: -source <directory containing report files or the file itself> -output <Location where output csv is to be created>");
         }
     }
 
