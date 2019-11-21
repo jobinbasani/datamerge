@@ -9,24 +9,35 @@ import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
 
 import java.time.ZonedDateTime;
+import java.util.Objects;
+
+import static com.jobinbasani.reader.record.deserializer.DateDeserializer.DATE_FORMAT;
+
 @JacksonXmlRootElement(localName = "records")
 public class ReportRecord implements Record {
 
     @CsvBindByPosition(position = 0)
     private String clientAddress;
+
     @CsvBindByPosition(position = 1)
     private String clientGuid;
+
     @CsvBindByPosition(position = 2)
-    @CsvDate("yyyy-MM-dd HH:mm:ss z")
+    @CsvDate(DATE_FORMAT)
     private ZonedDateTime requestTime;
+
     @CsvBindByPosition(position = 3)
     private String serviceGuid;
+
     @CsvBindByPosition(position = 4)
     private int retriesRequest;
+
     @CsvBindByPosition(position = 5)
     private int packetsRequested;
+
     @CsvBindByPosition(position = 6)
     private int packetsServiced;
+
     @CsvBindByPosition(position = 7)
     private int maxHoleSize;
 
@@ -79,6 +90,7 @@ public class ReportRecord implements Record {
     public void setClientGuid(String clientGuid) {
         this.clientGuid = clientGuid;
     }
+
     @JsonProperty("request-time")
     @JsonDeserialize(using = DateDeserializer.class)
     public void setRequestTime(ZonedDateTime requestTime) {
@@ -108,6 +120,26 @@ public class ReportRecord implements Record {
     @JsonProperty("max-hole-size")
     public void setMaxHoleSize(int maxHoleSize) {
         this.maxHoleSize = maxHoleSize;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ReportRecord that = (ReportRecord) o;
+        return retriesRequest == that.retriesRequest &&
+                packetsRequested == that.packetsRequested &&
+                packetsServiced == that.packetsServiced &&
+                maxHoleSize == that.maxHoleSize &&
+                clientAddress.equals(that.clientAddress) &&
+                clientGuid.equals(that.clientGuid) &&
+                requestTime.equals(that.requestTime) &&
+                serviceGuid.equals(that.serviceGuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientAddress, clientGuid, requestTime, serviceGuid, retriesRequest, packetsRequested, packetsServiced, maxHoleSize);
     }
 
     @Override

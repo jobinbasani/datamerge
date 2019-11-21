@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<records>
+    <report>
+        <packets-serviced>10</packets-serviced>
+        <client-guid>0ab47f58-2c17-4b8d-9bd1-20ca3b924877</client-guid>
+        <packets-requested>7</packets-requested>
+        <service-guid>3cc76b74-7d16-4651-9699-34332a56f6e7</service-guid>
+        <retries-request>8</retries-request>
+        <request-time>2016-06-28 17:05:59 ADT</request-time>
+        <client-address>100.244.243.255</client-address>
+        <max-hole-size>6</max-hole-size>
+    </report>
+    <report>
+        <packets-serviced>9</packets-serviced>
+        <client-guid>c6379614-8ad6-4318-b21f-8f977ce874ec</client-guid>
+        <packets-requested>12</packets-requested>
+        <service-guid>52073b51-cd51-4438-bd54-3bce3a7c239f</service-guid>
+        <retries-request>5</retries-request>
+        <request-time>2016-06-29 03:58:24 ADT</request-time>
+        <client-address>166.224.30.98</client-address>
+        <max-hole-size>14</max-hole-size>
+    </report>
+    <report>
+        <packets-serviced>17</packets-serviced>
+        <client-guid>253462d8-f8c4-41d5-9d0d-56ae360b8138</client-guid>
+        <packets-requested>10</packets-requested>
+        <service-guid>9e3d54d8-bcea-4bd5-94f5-bd636df152fa</service-guid>
+        <retries-request>7</retries-request>
+        <request-time>2016-06-28 19:06:50 ADT</request-time>
+        <client-address>121.160.149.186</client-address>
+        <max-hole-size>14</max-hole-size>
+    </report>
+    <report>
+        <packets-serviced>16</packets-serviced>
+        <client-guid>63652f6f-5441-4ad0-a5e7-9c0818e4696b</client-guid>
+        <packets-requested>3</packets-requested>
+        <service-guid>d224de85-cd41-4f03-bff6-de9815877975</service-guid>
+        <retries-request>3</retries-request>
+        <request-time>2016-06-28 11:56:14 ADT</request-time>
+        <client-address>240.107.225.33</client-address>
+        <max-hole-size>6</max-hole-size>
+    </report>
+    <report>
+        <packets-serviced>0</packets-serviced>
+        <client-guid>63652f6f-5441-4ad0-a5e7-9c0818e4696b</client-guid>
+        <packets-requested>3</packets-requested>
+        <service-guid>d224de85-cd41-4f03-bff6-de9815877975</service-guid>
+        <retries-request>3</retries-request>
+        <request-time>2016-06-28 11:56:14 ADT</request-time>
+        <client-address>240.107.225.33</client-address>
+        <max-hole-size>6</max-hole-size>
+    </report>
+</records>

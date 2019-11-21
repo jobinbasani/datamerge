@@ -13,12 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 
 import static com.jobinbasani.reader.enums.RecordType.CSV;
+import static java.util.Collections.*;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.*;
 
 public class DataMergeRunner {
     private static final Logger logger = LoggerFactory.getLogger(DataMergeRunner.class);
@@ -49,10 +50,18 @@ public class DataMergeRunner {
         List<RecordProcessor> recordProcessors = Arrays.asList(new CsvRecordProcessor(), new JsonRecordProcessor(), new XmlRecordProcessor());
         DataMergeProcessor dataMergeProcessor = new DataMergeProcessor(ofNullable(source).orElse(defaultSource), recordProcessors);
         List<Record> records = dataMergeProcessor.getRecords();
-        logger.info("Record size = {}",records.size());
-        logger.info("Records = {}", records);
+        logger.info("Records size = {}",records.size());
         File outputFile = new File(Optional.ofNullable(outputFileName).orElse(String.format("output%soutput_%d.csv", File.separator, LocalDateTime.now().getNano())));
         dataMergeProcessor.writeRecords(records, CSV, outputFile);
+        Map<String, Long> result = records.stream()
+                .map(Record::getServiceGuid)
+                .collect(groupingBy(Function.identity(), counting()))
+                .entrySet().stream()
+                .sorted(reverseOrder(Map.Entry.comparingByValue()))
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        logger.info("============Service GUID, No of Records============");
+        result.keySet().stream().forEach(serviceId -> logger.info("{}\t{}",serviceId,result.get(serviceId)));
+        logger.info("==================End of Summary==================");
     }
 
 }

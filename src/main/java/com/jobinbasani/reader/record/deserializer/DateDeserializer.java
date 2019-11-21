@@ -11,6 +11,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateDeserializer extends StdDeserializer<ZonedDateTime> {
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss z";
     public DateDeserializer() {
         this(null);
     }
@@ -25,7 +26,7 @@ public class DateDeserializer extends StdDeserializer<ZonedDateTime> {
         try{
             return ZonedDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(date)), ZoneId.systemDefault());
         }catch (NumberFormatException nfe){
-            return ZonedDateTime.parse(date, DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm:ss z"));
+            return ZonedDateTime.parse(date, DateTimeFormatter.ofPattern(DATE_FORMAT));
         }
     }
 }

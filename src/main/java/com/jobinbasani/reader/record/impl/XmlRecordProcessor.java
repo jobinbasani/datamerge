@@ -1,6 +1,7 @@
 package com.jobinbasani.reader.record.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.jobinbasani.reader.RecordProcessor;
@@ -31,8 +32,7 @@ public class XmlRecordProcessor implements RecordProcessor {
     @Override
     public List<Record> getRecords(File reportFile) {
 
-        XmlMapper mapper = new XmlMapper();
-        mapper.findAndRegisterModules();
+        ObjectMapper mapper = new XmlMapper();
         mapper.disable(FAIL_ON_UNKNOWN_PROPERTIES);
         try(Reader reader = Files.newBufferedReader(reportFile.toPath())) {
             List<ReportRecord> entries = mapper.readValue(reader, new TypeReference<List<ReportRecord>>() {});

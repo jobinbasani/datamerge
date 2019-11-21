@@ -30,11 +30,11 @@ public class JsonRecordProcessor implements RecordProcessor {
     @Override
     public List<Record> getRecords(File reportFile) {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
         mapper.disable(FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
         try(Reader fileReader = Files.newBufferedReader(reportFile.toPath())) {
             List<ReportRecord> records = mapper.readValue(fileReader, new TypeReference<List<ReportRecord>>(){});
+            logger.info("Processed file -> {}",reportFile.toPath());
             return new ArrayList<>(records);
         } catch (IOException e) {
             logger.error("Error parsing JSON report - ", e);

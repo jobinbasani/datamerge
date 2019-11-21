@@ -7,10 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +26,10 @@ public class DataMergeProcessor {
         return files.stream()
                 .map(file -> getRecordReader(file).getRecords(file))
                 .flatMap(Collection::stream)
+                .collect(Collectors.toSet())
+                .stream()
+                .sorted(Comparator.comparing(Record::getRequestTime))
+                .filter(record -> record.getPacketsServiced()>0)
                 .collect(Collectors.toList());
     }
 

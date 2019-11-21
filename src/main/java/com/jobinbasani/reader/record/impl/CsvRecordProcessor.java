@@ -42,6 +42,7 @@ public class CsvRecordProcessor implements RecordProcessor {
                     .build()
                     .parse();
             csvReader.close();
+            logger.info("Processed file -> {}",reportFile.toPath());
             return records;
         } catch (IOException e) {
             logger.error("Error processing records - ", e);
@@ -54,7 +55,7 @@ public class CsvRecordProcessor implements RecordProcessor {
         try {
             Files.createDirectories(outputFile.toPath().getParent());
         } catch (IOException e) {
-            logger.error("Error creating output directory structure {}",e);
+            logger.error("Error creating output directory structure",e);
             return;
         }
         try(CSVWriter csvWriter = new CSVWriter(Files.newBufferedWriter(outputFile.toPath(), CREATE, APPEND), DEFAULT_SEPARATOR, NO_QUOTE_CHARACTER, DEFAULT_ESCAPE_CHARACTER, RFC4180_LINE_END);
@@ -66,6 +67,7 @@ public class CsvRecordProcessor implements RecordProcessor {
                     .withMappingStrategy(strategy)
                     .build();
             beanToCsv.write(records);
+            logger.info("Output file saved at {}", outputFile.getCanonicalPath());
         } catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
             logger.error("Error writing output - ", e);
         }
