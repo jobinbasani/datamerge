@@ -28,8 +28,8 @@ public class DataMergeProcessor {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet())
                 .stream()
-                .sorted(Comparator.comparing(Record::getRequestTime))
                 .filter(record -> record.getPacketsServiced()>0)
+                .sorted(Comparator.comparing(Record::getRequestTime))
                 .collect(Collectors.toList());
     }
 

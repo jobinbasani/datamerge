@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.opencsv.ICSVWriter.*;
-import static java.nio.file.StandardOpenOption.APPEND;
-import static java.nio.file.StandardOpenOption.CREATE;
 
 public class CsvRecordProcessor implements RecordProcessor {
 
@@ -65,7 +63,7 @@ public class CsvRecordProcessor implements RecordProcessor {
             logger.error("Error creating output directory structure",e);
             return;
         }
-        try(CSVWriter csvWriter = new CSVWriter(Files.newBufferedWriter(outputFile.toPath(), CREATE, APPEND), DEFAULT_SEPARATOR, NO_QUOTE_CHARACTER, DEFAULT_ESCAPE_CHARACTER, RFC4180_LINE_END);
+        try(CSVWriter csvWriter = new CSVWriter(Files.newBufferedWriter(outputFile.toPath()), DEFAULT_SEPARATOR, NO_QUOTE_CHARACTER, DEFAULT_ESCAPE_CHARACTER, RFC4180_LINE_END);
             CSVReader csvReader = new CSVReader(Files.newBufferedReader(inputReferenceFile.toPath()))) {
             MappingStrategy<ReportRecord> strategy = new FuzzyMappingStrategy<>();
             strategy.setType(ReportRecord.class);
