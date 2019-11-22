@@ -32,6 +32,8 @@ mvn exec:java -Dexec.args="-source /Users/username/Desktop/reports -output /User
 ```
 Replace the ```-source``` and ```-output``` with correct values.
 
+Use the ```-csvheaders``` option to specify different headers in the output csv file.
+
 Additionally, you can execute the ```com.jobinbasani.DataMergeRunner``` class directly too. The ```-source``` and ```-output``` arguments can be passed here too.
 After execution, it prints a summary that groups the records by Service GUID and shows the number of records associated with it.
 

@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.function.Function;
 
 import static com.jobinbasani.reader.enums.RecordType.CSV;
-import static java.util.Collections.*;
+import static java.util.Collections.reverseOrder;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
 
@@ -30,6 +30,10 @@ public class DataMergeRunner {
     private String outputFileName;
     @Option(name = "-defaultSource", hidden = true, usage = "Default source directory")
     private String defaultSource = ".";
+    @Option(name="-csvheaders", usage = "Headers to be used in CSV output")
+    private String csvHeaders;
+    @Option(name="-defaultCsvheaders", hidden = true, usage = "Default CSV Headers")
+    private String defaultCsvHeaders = "client-address,client-guid,request-time,service-guid,retries-request,packets-requested,packets-serviced,max-hole-size";
 
     public static void main(String[] args) {
         new DataMergeRunner().runMain(args);
@@ -47,7 +51,7 @@ public class DataMergeRunner {
     }
 
     private void runDataMerge() {
-        List<RecordProcessor> recordProcessors = Arrays.asList(new CsvRecordProcessor(), new JsonRecordProcessor(), new XmlRecordProcessor());
+        List<RecordProcessor> recordProcessors = Arrays.asList(new JsonRecordProcessor(), new XmlRecordProcessor(),new CsvRecordProcessor().withHeaders(ofNullable(csvHeaders).orElse(defaultCsvHeaders)));
         DataMergeProcessor dataMergeProcessor = new DataMergeProcessor(ofNullable(source).orElse(defaultSource), recordProcessors);
         List<Record> records = dataMergeProcessor.getRecords();
         logger.info("Records size = {}",records.size());

@@ -6,7 +6,9 @@ import com.jobinbasani.reader.record.Record;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
-import com.opencsv.bean.*;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.slf4j.Logger;
@@ -19,12 +21,14 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.opencsv.ICSVWriter.*;
 
 public class CsvRecordProcessor implements RecordProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(CsvRecordProcessor.class);
+    private String headers;
 
     @Override
     public RecordType getRecordType() {
@@ -51,7 +55,7 @@ public class CsvRecordProcessor implements RecordProcessor {
     }
 
     @Override
-    public void writeRecords(List<Record> records, File inputReferenceFile, File outputFile) {
+    public void writeRecords(List<Record> records, File outputFile) {
         try {
             if(outputFile.isDirectory()){
                 Files.createDirectories(outputFile.toPath());
@@ -63,18 +67,21 @@ public class CsvRecordProcessor implements RecordProcessor {
             logger.error("Error creating output directory structure",e);
             return;
         }
-        try(CSVWriter csvWriter = new CSVWriter(Files.newBufferedWriter(outputFile.toPath()), DEFAULT_SEPARATOR, NO_QUOTE_CHARACTER, DEFAULT_ESCAPE_CHARACTER, RFC4180_LINE_END);
-            CSVReader csvReader = new CSVReader(Files.newBufferedReader(inputReferenceFile.toPath()))) {
-            MappingStrategy<ReportRecord> strategy = new FuzzyMappingStrategy<>();
-            strategy.setType(ReportRecord.class);
-            strategy.captureHeader(csvReader);
+        try(CSVWriter csvWriter = new CSVWriter(Files.newBufferedWriter(outputFile.toPath()), DEFAULT_SEPARATOR, NO_QUOTE_CHARACTER, DEFAULT_ESCAPE_CHARACTER, RFC4180_LINE_END)) {
+            Optional.ofNullable(headers)
+                    .map(s -> s.split(String.valueOf(DEFAULT_SEPARATOR)))
+                    .ifPresent(strings -> csvWriter.writeNext(strings,false));
             StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(csvWriter)
-                    .withMappingStrategy(strategy)
                     .build();
             beanToCsv.write(records);
             logger.info("Output file saved at {}", outputFile.getCanonicalPath());
         } catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
             logger.error("Error writing output - ", e);
         }
+    }
+
+    public CsvRecordProcessor withHeaders(String headers) {
+        this.headers = headers;
+        return this;
     }
 }

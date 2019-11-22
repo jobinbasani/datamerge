@@ -13,7 +13,7 @@ public interface RecordProcessor {
     default boolean canProcessFile(File reportFile){
         return reportFile.exists() && reportFile.isFile() && reportFile.getName().toUpperCase().endsWith("." + getRecordType().name());
     }
-    default void writeRecords(List<Record> records, File inputReferenceFile, File outputFile){
+    default void writeRecords(List<Record> records, File outputFile){
         throw new NotImplementedException("Not yet implemented!");
     }
 }

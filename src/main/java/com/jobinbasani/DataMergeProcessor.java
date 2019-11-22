@@ -34,12 +34,9 @@ public class DataMergeProcessor {
     }
 
     public void writeRecords(List<Record> records, RecordType recordType, File outputFile){
-        Optional<File> referenceFile = files.stream().filter(file -> file.getName().toUpperCase().endsWith("."+recordType.name())).findFirst();
-        if (referenceFile.isPresent()) {
-            recordProcessors.stream().filter(recordProcessor -> recordProcessor.getRecordType() == recordType)
-                    .findFirst()
-                    .ifPresent(recordProcessor -> recordProcessor.writeRecords(records, referenceFile.get(), outputFile));
-        }
+        recordProcessors.stream().filter(recordProcessor -> recordProcessor.getRecordType() == recordType)
+                .findFirst()
+                .ifPresent(recordProcessor -> recordProcessor.writeRecords(records, outputFile));
     }
 
     private List<File> getFiles(File sourceFile) {
